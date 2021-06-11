@@ -1,5 +1,5 @@
 export class Poem {
-    private title: string;
+    public title: string;
     private author: string;
     private verses: string[];
 

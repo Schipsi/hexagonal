@@ -1,4 +1,7 @@
+import { IncomingMessage, ServerResponse } from "http";
+import { Poem } from "./Domain/Entity/poem";
 import {IObtainPoems} from "./Driven/Ports/IObtainPoems";
+import { AskPoemsFromWeb } from "./Driver/Adapters/AskPoemsFromWeb";
 import {IAskPoems} from "./Driver/Ports/IAskPoems";
 import {InMemoryPoemsLibrary} from "./Driven/Adapters/InMemoryPoemsLibrary";
 import {AskPoemsFromCLI} from "./Driver/Adapters/AskPoemsFromCLI";
@@ -17,6 +20,10 @@ abstract class PoemGiver {
 }
 
 class PoemsGiverCLI extends PoemGiver {
+    constructor() {
+        super(new InMemoryPoemsLibrary(), new AskPoemsFromCLI());
+    }
+
     brouette(): void {
         const rl = readline.createInterface({
             input: process.stdin,
@@ -30,18 +37,35 @@ class PoemsGiverCLI extends PoemGiver {
     }
 }
 
-const poemGiverCLI = new PoemsGiverCLI(new InMemoryPoemsLibrary(), new AskPoemsFromCLI());
-poemGiverCLI.brouette();
-
 class PoemsGiverWeb extends PoemGiver {
+    constructor() {
+        super(new InMemoryPoemsLibrary(), new AskPoemsFromWeb());
+    }
+
     brouette(): void {
         const http = require('http');const hostname = '127.0.0.1';
-        const port = 3000;const server = http.createServer((req, res) => {
+        const port = 3000;
+        const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/plain');
-            res.end('Hello World\n');
-        });server.listen(port, hostname, () => {
+            if (req?.url?.includes('getPoems')) {
+                res.end(this.iObtainPoems.getNumberOfPoems(this.iAskPoems.getPoemCount(req)).map((poem: Poem) => poem.title).join(', '))
+            } else {
+                res.end('Hello World\n');
+            }
+
+        });
+        server.listen(port, hostname, () => {
             console.log(`Server running at http://${hostname}:${port}/`);
         });
     }
 }
+
+
+const poemGiverCLI = new PoemsGiverCLI();
+poemGiverCLI.brouette();
+
+/*
+const poemGiverWeb = new PoemsGiverWeb();
+poemGiverWeb.brouette();
+*/

@@ -1,6 +1,6 @@
 import { Poem } from '../../Domain/Entity/poem';
 
 
-export interface IObtainPoem {
+export interface IObtainPoems {
     getNumberOfPoems(count: number): Poem[]
 }

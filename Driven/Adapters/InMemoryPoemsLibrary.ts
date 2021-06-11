@@ -1,7 +1,7 @@
-import {IObtainPoem} from "../Ports/IObtainPoem";
+import {IObtainPoems} from "../Ports/IObtainPoems";
 import {Poem} from "../../Domain/Entity/poem";
 
-class InMemoryPoemsLibrary implements IObtainPoem {
+export class InMemoryPoemsLibrary implements IObtainPoems {
     poems = [
         new Poem('Brouette', 'Diane', ['Vroom vroom', 'C\'est la brouette', 'Vroom vroom', 'Elle roule.']),
         new Poem('Pipou', 'Thibaut', ['C\'est le pipou', 'Il est mignou', 'Mais un peu casse-cou.']),

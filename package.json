@@ -2,13 +2,14 @@
   "name": "hexagonal",
   "version": "1.0.0",
   "description": "hexagonal architecture etst project",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^15.12.2",
     "express": "^4.17.1"
   }
 }

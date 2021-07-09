@@ -1,7 +1,7 @@
 export class Poem {
-    public title: string;
-    private author: string;
-    private verses: string[];
+    title: string;
+    author: string;
+    verses: string[];
 
     constructor(title: string, author: string, verses: string[]) {
         this.title = title;

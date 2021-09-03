@@ -1,3 +1,3 @@
 export interface IAskPoems {
-    getPoemCount(arg): number
+    handle(): void
 }

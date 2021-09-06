@@ -1,9 +1,9 @@
 import readline from "readline";
 import {IAskPoems} from "../core/useCase/IAskPoems";
-import { IObtainPoems } from "../core/useCase/IObtainPoems";
+import { PoemsReader } from "../core/useCase/PoemsReader";
 
 export class PoemsFromCLI implements IAskPoems {
-    constructor(private poemObtainer: IObtainPoems) {}
+    constructor(private poemsReader: PoemsReader) {}
 
     handle(): void {
         const rl = readline.createInterface({
@@ -12,7 +12,7 @@ export class PoemsFromCLI implements IAskPoems {
         });
 
         rl.question("Combien tu veux de poèmes (3 max) ? ", async (poemCount) => {
-            console.log((await this.poemObtainer.handle(Number.parseInt(poemCount, 10))));
+            console.log((await this.poemsReader.getPoems(+poemCount)));
             rl.close();
         });
     }

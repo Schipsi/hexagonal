@@ -3,12 +3,12 @@ import * as querystring from "querystring";
 import * as url from "url";
 import { Poem } from "../core/domain/Entity/poem";
 import {IAskPoems} from "../core/useCase/IAskPoems";
-import { IObtainPoems } from "../core/useCase/IObtainPoems";
+import { PoemsReader } from "../core/useCase/PoemsReader";
 
 export class PoemsFromWeb implements IAskPoems {
     private readonly hostname = 'localhost';
     private readonly port = 3000;
-    constructor(private poemObtainer: IObtainPoems) {}
+    constructor(private poemsReader: PoemsReader) {}
 
     handle(): void {
         const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
@@ -16,7 +16,7 @@ export class PoemsFromWeb implements IAskPoems {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/html');
             if (req?.url?.includes('poemCount')) {
-                const poems = await this.poemObtainer.handle(askedPoemCount);
+                const poems = await this.poemsReader.getPoems(askedPoemCount);
                 const response: string = poems.reduce((acc: string, poem: Poem) => {
                     return acc + this.formatPoemForWeb(poem);
                 }, '')

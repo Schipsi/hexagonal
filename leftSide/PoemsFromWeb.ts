@@ -2,21 +2,20 @@ import http, { IncomingMessage, ServerResponse } from "http";
 import * as querystring from "querystring";
 import * as url from "url";
 import { Poem } from "../core/domain/Entity/poem";
-import {IAskPoems} from "../core/useCase/IAskPoems";
-import { PoemsReader } from "../core/useCase/PoemsReader";
+import { CommandHandler } from "../core/useCase/CommandHandler";
 
-export class PoemsFromWeb implements IAskPoems {
+export class PoemsFromWeb {
     private readonly hostname = 'localhost';
     private readonly port = 3000;
-    constructor(private poemsReader: PoemsReader) {}
+    constructor(private poemsReader: CommandHandler<Promise<Poem[]>>) {}
 
-    handle(): void {
+    start(): void {
         const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
             const askedPoemCount = this.getPoemsCountFromUrl(req);
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/html');
             if (req?.url?.includes('poemCount')) {
-                const poems = await this.poemsReader.getPoems(askedPoemCount);
+                const poems = await this.poemsReader.handle(askedPoemCount);
                 const response: string = poems.reduce((acc: string, poem: Poem) => {
                     return acc + this.formatPoemForWeb(poem);
                 }, '')

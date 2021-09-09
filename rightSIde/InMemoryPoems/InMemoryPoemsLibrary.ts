@@ -1,5 +1,5 @@
-import {IObtainPoems} from "../../core/useCase/IObtainPoems";
-import {Poem} from "../../core/domain/Entity/poem";
+import { IObtainPoems } from "../../core/useCase/GetXPoems/IObtainPoems";
+import { Poem } from "../../core/domain/Entity/poem";
 
 export class InMemoryPoemsLibrary implements IObtainPoems {
     poems = [
@@ -8,7 +8,7 @@ export class InMemoryPoemsLibrary implements IObtainPoems {
         new Poem('If', 'Rudyard Kipling', ['If you can keep your head when all about you,', 'Are losing theirs and blaming it on you,', 'If you can trust yourself when all men doubt you,', 'But make allowance for their doubting too;']),
     ];
 
-    handle(count: number): Promise<Poem[]> {
+    getXPoems(count: number): Promise<Poem[]> {
         return Promise.resolve(this.poems.slice(0, count));
     }
 }
